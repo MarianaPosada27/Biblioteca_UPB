@@ -13,19 +13,16 @@ namespace Biblioteca_UPB.Services
         private readonly List<Prestamo> _prestamos = new();
 
         public int DiasPrestamoPorDefecto { get; set; } = ReglasPrestamo.DiasPrestamoPorDefecto;
-        public int MaximoRenovaciones { get; set; } = ReglasPrestamo.MaximoRenovaciones;
-        public int MaximoLibrosPorEstudiante { get; set; } = ReglasPrestamo.MaximoLibrosPorEstudiante;
 
         public event EventHandler<PrestamoEventArgs>? PrestamoRealizado;
         public event EventHandler<PrestamoEventArgs>? PrestamoDevuelto;
-        public event EventHandler<PrestamoEventArgs>? PrestamoRenovado;
 
         // Prestar un libro
         public Prestamo RealizarPrestamo(Libro libro, Estudiante estudiante)
         {
             ValidarPrestamo(libro, estudiante);
 
-            var prestamo = new Prestamo(libro.IdLibro, estudiante.Documento, DiasPrestamoPorDefecto);
+            var prestamo = new Prestamo(libro, estudiante, DiasPrestamoPorDefecto);
             _prestamos.Add(prestamo);
 
             libro.Stock--;
@@ -42,40 +39,15 @@ namespace Biblioteca_UPB.Services
             var prestamo = _prestamos.FirstOrDefault(p => p.IdPrestamo == idPrestamo && p.EstaActivo)
                 ?? throw new InvalidOperationException("Préstamo no encontrado o ya devuelto.");
 
+            Console.WriteLine($"Días de préstamo: {ReglasPrestamo.CalcularDiasPrestamo(prestamo.FechaPrestamo)}");
+
             prestamo.Devolver();
             libro.Stock++;
             libro.Disponible = true;
 
             PrestamoDevuelto?.Invoke(this, new PrestamoEventArgs(prestamo, libro, null));
         }
-
-        // Renovar préstamo
-        public void RenovarPrestamo(string idPrestamo)
-        {
-            var prestamo = _prestamos.FirstOrDefault(p => p.IdPrestamo == idPrestamo && p.EstaActivo)
-                ?? throw new InvalidOperationException("Préstamo no encontrado o ya devuelto.");
-
-            prestamo.Renovar(DiasPrestamoPorDefecto, MaximoRenovaciones);
-            PrestamoRenovado?.Invoke(this, new PrestamoEventArgs(prestamo, null, null));
-        }
-
-        // Consultas
-        public List<Prestamo> ObtenerPrestamosEstudiante(string idEstudiante, bool soloActivos = true)
-        {
-            var query = _prestamos.Where(p => p.IdEstudiante == idEstudiante);
-            if (soloActivos) query = query.Where(p => p.EstaActivo);
-            return query.OrderBy(p => p.FechaPrestamo).ToList();
-        }
-
-        public List<Prestamo> ObtenerPrestamosLibro(string idLibro, bool soloActivos = true)
-        {
-            var query = _prestamos.Where(p => p.IdLibro == idLibro);
-            if (soloActivos) query = query.Where(p => p.EstaActivo);
-            return query.OrderBy(p => p.FechaPrestamo).ToList();
-        }
-
-        public List<Prestamo> ObtenerPrestamosVencidos()
-            => _prestamos.Where(p => p.EstaVencido).OrderBy(p => p.FechaVencimiento).ToList();
+        
 
         public List<Prestamo> ObtenerPrestamosActivos()
             => _prestamos.Where(p => p.EstaActivo).OrderBy(p => p.FechaVencimiento).ToList();
@@ -86,13 +58,10 @@ namespace Biblioteca_UPB.Services
             if (libro.Stock <= 0)
                 throw new InvalidOperationException("No hay ejemplares disponibles.");
 
-            if (ObtenerPrestamosEstudiante(estudiante.Documento).Count >= MaximoLibrosPorEstudiante)
-                throw new InvalidOperationException($"El estudiante ya tiene {MaximoLibrosPorEstudiante} libros prestados.");
-
-            if (_prestamos.Any(p => p.IdLibro == libro.IdLibro && p.IdEstudiante == estudiante.Documento && p.EstaActivo))
+            if (_prestamos.Any(p => p.Libro.IdLibro == libro.IdLibro && p.Estudiante.Documento == estudiante.Documento && p.EstaActivo))
                 throw new InvalidOperationException("El estudiante ya tiene este libro prestado.");
 
-            if (_prestamos.Any(p => p.IdEstudiante == estudiante.Documento && p.EstaVencido))
+            if (_prestamos.Any(p => p.Estudiante.Documento == estudiante.Documento && p.EstaVencido))
                 throw new InvalidOperationException("El estudiante tiene préstamos vencidos.");
         }
         // Obtener historial completo de préstamos (activos y devueltos)

@@ -10,23 +10,13 @@ namespace Biblioteca_UPB.Common
     {
         // Constantes
             public const int DiasPrestamoPorDefecto = 15;
-            public const int MaximoRenovaciones = 2;
-            public const int MaximoLibrosPorEstudiante = 3;
-            public const decimal MultaPorDiaRetraso = 500m;
 
-        // Método para calcular multa
-        public static decimal CalcularMulta(int diasAtraso)
+
+
+        // Método para calcular cantidad de dias que el estudiante tiene un libro hasta su devolución
+        public static int CalcularDiasPrestamo(DateTime fechaprestamo)
         {
-            if (diasAtraso < 0)
-                throw new ArgumentException("Los días de atraso no pueden ser negativos.");
-
-            return diasAtraso * MultaPorDiaRetraso;
-        }
-
-        // Método para calcular nueva fecha de vencimiento
-        public static DateTime CalcularNuevaFecha(DateTime fechaActual)
-        {
-            return fechaActual.AddDays(DiasPrestamoPorDefecto);
+            return (DateTime.Now - fechaprestamo).Days;  
         }
     }
 }

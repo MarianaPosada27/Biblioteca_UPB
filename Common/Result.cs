@@ -10,10 +10,10 @@ namespace Biblioteca_UPB.Common
         {
             // Propiedades
             public bool Ok { get; } //Solo lectura, indica si la operación fue exitosa    
-        public string Message { get; } //Solo lectura, mensaje asociado al resultado    
+            public string Message { get; } //Solo lectura, mensaje asociado al resultado    
 
-        // Constructor privado pqara forzar el uso de los métodos Success y Fail
-        private Result(bool ok, string message)
+            // Constructor privado pqara forzar el uso de los métodos Success y Fail
+            private Result(bool ok, string message)
             {
                 Ok = ok;
                 Message = message;
