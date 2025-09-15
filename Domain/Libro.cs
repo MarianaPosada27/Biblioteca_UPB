@@ -43,8 +43,6 @@ namespace Biblioteca_UPB.Domain
                 throw new ArgumentNullException(nameof(autor), "El autor no puede ser nulo.");
             if (diasPrestamo < 1)
                 throw new ArgumentException("Los días de préstamo deben ser mayor a 0.");
-            if (maximoRenovaciones < 0)
-                throw new ArgumentException("El máximo de renovaciones no puede ser negativo.");
 
             IdLibro = idLibro.Trim().ToUpper();
             Titulo = titulo.Trim().ToUpper();

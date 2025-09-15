@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Biblioteca_UPB.Common;
-using Biblioteca_UPB.Domain;
+﻿using Biblioteca_UPB.Domain;
 using Biblioteca_UPB.Services;
-using System.Globalization;
+
 
 namespace Biblioteca_UPB
 {

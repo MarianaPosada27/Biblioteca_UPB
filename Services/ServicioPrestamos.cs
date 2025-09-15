@@ -1,10 +1,6 @@
 ﻿using Biblioteca_UPB.Common;
 using Biblioteca_UPB.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Biblioteca_UPB.Services
 {
@@ -64,13 +60,7 @@ namespace Biblioteca_UPB.Services
             if (_prestamos.Any(p => p.Estudiante.Documento == estudiante.Documento && p.EstaVencido))
                 throw new InvalidOperationException("El estudiante tiene préstamos vencidos.");
         }
-        // Obtener historial completo de préstamos (activos y devueltos)
-        public List<Prestamo> ObtenerHistorialPrestamos()
-        {
-            return _prestamos
-                .OrderBy(p => p.FechaPrestamo)
-                .ToList();
-        }
+       
     }
 
     public class PrestamoEventArgs : EventArgs

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Biblioteca_UPB.Domain
 {
@@ -21,13 +17,7 @@ namespace Biblioteca_UPB.Domain
             Documento = documento;
             Nombre = nombre.Trim();
         }
-        //Metodo para cambiar el nombre de la persona
-        public void CambiarNombre(string nuevoNombre)
-        {
-            if (string.IsNullOrWhiteSpace(nuevoNombre))
-                throw new ArgumentException("El nombre no puede estar vacío.");
-            Nombre = nuevoNombre.Trim();
-        }
+        
         //Metodo sobrescrito para mostrar la informacion de la persona
         public override string ToString()=> $"{Nombre} (Documento: {Documento})";
     }
