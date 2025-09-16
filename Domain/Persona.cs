@@ -17,7 +17,6 @@ namespace Biblioteca_UPB.Domain
             Documento = documento;
             Nombre = nombre.Trim();
         }
-        
         //Metodo sobrescrito para mostrar la informacion de la persona
         public override string ToString()=> $"{Nombre} (Documento: {Documento})";
     }

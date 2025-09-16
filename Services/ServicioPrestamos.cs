@@ -14,20 +14,7 @@ namespace Biblioteca_UPB.Services
         public event EventHandler<PrestamoEventArgs>? PrestamoDevuelto;
 
         // Prestar un libro
-        public Prestamo RealizarPrestamo(Libro libro, Estudiante estudiante)
-        {
-            ValidarPrestamo(libro, estudiante);
 
-            var prestamo = new Prestamo(libro, estudiante, DiasPrestamoPorDefecto);
-            _prestamos.Add(prestamo);
-
-            libro.Stock--;
-            libro.Disponible = libro.Stock > 0;
-
-            PrestamoRealizado?.Invoke(this, new PrestamoEventArgs(prestamo, libro, estudiante));
-
-            return prestamo;
-        }
 
         // Devolver préstamo
         public void DevolverPrestamo(string idPrestamo, Libro libro)

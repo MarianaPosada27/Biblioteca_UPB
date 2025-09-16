@@ -21,11 +21,7 @@ namespace Biblioteca_UPB.Domain
         public List<string> UsuariosPrestamo { get; private set; } = new List<string>();
         public Dictionary<string, DateTime> FechasPrestamo { get; private set; } = new Dictionary<string, DateTime>();
         public Dictionary<string, DateTime> FechasVencimiento { get; private set; } = new Dictionary<string, DateTime>();
-        public Dictionary<string, int> NumeroRenovaciones { get; private set; } = new Dictionary<string, int>();
-
-        // Propiedades para reservas
-        public Queue<string> ColaReservas { get; private set; } = new Queue<string>();
-        public Dictionary<string, DateTime> FechasReserva { get; private set; } = new Dictionary<string, DateTime>();
+        
 
         // Configuración del sistema
         public int DiasPrestamo { get; init; } = 15;  // Días por defecto del préstamo
@@ -33,7 +29,7 @@ namespace Biblioteca_UPB.Domain
         public event EventHandler? StockAgotado;
 
         // Constructor
-        public Libro(string idLibro, string titulo, Autor autor, int diasPrestamo = 15, int maximoRenovaciones = 2)
+        public Libro(string idLibro, string titulo, Autor autor, int diasPrestamo = 15)
         {
             if (string.IsNullOrWhiteSpace(idLibro))
                 throw new ArgumentException("El ID del libro no puede estar vacío.");
@@ -43,6 +39,7 @@ namespace Biblioteca_UPB.Domain
                 throw new ArgumentNullException(nameof(autor), "El autor no puede ser nulo.");
             if (diasPrestamo < 1)
                 throw new ArgumentException("Los días de préstamo deben ser mayor a 0.");
+    
 
             IdLibro = idLibro.Trim().ToUpper();
             Titulo = titulo.Trim().ToUpper();
@@ -68,7 +65,7 @@ namespace Biblioteca_UPB.Domain
             UsuariosPrestamo.Add(usuario);
             FechasPrestamo[usuario] = DateTime.Now;
             FechasVencimiento[usuario] = DateTime.Now.AddDays(DiasPrestamo);
-            NumeroRenovaciones[usuario] = 0;
+
 
             // Actualizar disponibilidad
             Disponible = Stock > 0;
@@ -89,36 +86,12 @@ namespace Biblioteca_UPB.Domain
             UsuariosPrestamo.Remove(usuario);
             FechasPrestamo.Remove(usuario);
             FechasVencimiento.Remove(usuario);
-            NumeroRenovaciones.Remove(usuario);
+
 
             // Actualizar disponibilidad
             Disponible = true;
 
             Console.WriteLine($"Libro '{Titulo}' devuelto por {usuario}. Stock actual: {Stock}");
         }
-
-        // Método para obtener información completa del libro
-        public string MostrarInfo()
-        {
-            var info = $"ID: {IdLibro} | Título: {Titulo} | Autor: {Autor}\n";
-            info += $"Stock: {Stock} | Disponible: {(Disponible ? "Sí" : "No")}\n";
-
-            if (UsuariosPrestamo.Count > 0)
-            {
-                info += "Préstamos activos:\n";
-                foreach (var usuario in UsuariosPrestamo)
-                {
-                    info += $"  - {usuario}: Vence {FechasVencimiento[usuario]:dd/MM/yyyy} (Renovaciones: {NumeroRenovaciones[usuario]})\n";
-                }
-            }
-
-            if (ColaReservas.Count > 0)
-            {
-                info += $"Reservas en cola: {string.Join(", ", ColaReservas)}\n";
-            }
-
-            return info.TrimEnd();
-        }
-
     }
 }
