@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Biblioteca_UPB.Domain
 {
@@ -26,5 +27,6 @@ namespace Biblioteca_UPB.Domain
         public Estudiante(string documento, string nombre) : base(documento, nombre)
         {
         }
+
     }
 }

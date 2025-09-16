@@ -36,7 +36,7 @@ namespace Biblioteca_UPB
 
             // 1) Datos iniciales
 
-            var estudiante = new Estudiante("1001234567", "Mariana Álvarez");
+            Estudiante estudiante = listaEstudiantes[0];
             var servicio = new ServicioPrestamos();
 
 
